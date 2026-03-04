@@ -1,103 +1,204 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-
-<meta charset="utf-8" />
-https://prorai8.com/roi
-<title>Prorai8 – Property ROI Calculator</title>
-
-<meta name="description" content="Prorai8 helps investors calculate property ROI and analyze real estate investments before buying.">
+<meta charset="UTF-8">
+<title>Prorai8 — Property ROI Analysis</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
 
 body{
-font-family:Arial;
+font-family: Inter, Arial, sans-serif;
 margin:0;
-line-height:1.6;
-text-align:center;
-background:#f5f7fa;
+background:#0f172a;
+color:#e2e8f0;
 }
 
-header{
-background:#0b1c2c;
-color:white;
-padding:80px 20px;
-}
-
-button{
-background:#2f80ed;
-color:white;
-border:none;
-padding:15px 30px;
-font-size:18px;
-border-radius:6px;
-cursor:pointer;
-margin-top:20px;
-}
-
-section{
-max-width:900px;
+.container{
+max-width:1100px;
 margin:auto;
+padding:60px 20px;
+}
+
+h1{
+font-size:48px;
+margin-bottom:20px;
+}
+
+h2{
+font-size:32px;
+margin-bottom:20px;
+}
+
+p{
+color:#cbd5f5;
+line-height:1.6;
+}
+
+.hero{
+text-align:center;
+padding:100px 20px;
+}
+
+.button{
+display:inline-block;
+padding:14px 26px;
+background:#2563eb;
+color:white;
+text-decoration:none;
+border-radius:8px;
+margin-top:20px;
+font-weight:600;
+}
+
+.button:hover{
+background:#1d4ed8;
+}
+
+.features{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+gap:30px;
+margin-top:40px;
+}
+
+.card{
+background:#1e293b;
+padding:30px;
+border-radius:12px;
+}
+
+.example{
+background:#111827;
 padding:40px;
+border-radius:12px;
+margin-top:40px;
 }
 
 footer{
-margin-top:60px;
-padding:30px;
-background:#eee;
+text-align:center;
+padding:40px;
+color:#94a3b8;
+font-size:14px;
 }
 
 </style>
-
 </head>
 
 <body>
 
-<header>
+<section class="hero">
 
-<h1>Prorai8</h1>
-
-<p>AI-powered property ROI analysis for real estate investors</p>
-
-<a href="/roi/">
-<button>Open ROI Calculator</button>
-</a>
-
-</header>
-
-<section>
-
-<h2>Analyze Property Investments Before You Buy</h2>
+<h1>AI-Powered Property ROI Analysis</h1>
 
 <p>
-Prorai8 helps real estate investors calculate return on investment,
-analyze rental strategies, and evaluate property deals using data.
+Analyze rental property investments before you buy.  
+Prorai8 helps investors calculate cashflow, return on investment,
+and rental profitability in seconds.
 </p>
+
+<a href="/roi" class="button">Open ROI Calculator</a>
 
 </section>
 
-<section>
+<section class="container">
 
-<h2>Start With the ROI Calculator</h2>
+<h2>Why Investors Use Prorai8</h2>
+
+<div class="features">
+
+<div class="card">
+<h3>ROI Calculation</h3>
+<p>
+Estimate return on investment using rental income,
+operating costs, and property price.
+</p>
+</div>
+
+<div class="card">
+<h3>Cashflow Forecast</h3>
+<p>
+Understand whether a property generates positive monthly income
+before committing to the purchase.
+</p>
+</div>
+
+<div class="card">
+<h3>Rental Strategy Comparison</h3>
+<p>
+Evaluate long-term, mid-term, and hybrid rental models
+to identify the most profitable strategy.
+</p>
+</div>
+
+</div>
+
+</section>
+
+<section class="container">
+
+<h2>How It Works</h2>
+
+<div class="features">
+
+<div class="card">
+<h3>1. Enter Property Details</h3>
+<p>
+Input purchase price, rent estimates, and operating costs.
+</p>
+</div>
+
+<div class="card">
+<h3>2. Analyze Investment</h3>
+<p>
+Prorai8 calculates ROI, cashflow, and break-even occupancy.
+</p>
+</div>
+
+<div class="card">
+<h3>3. Make Better Decisions</h3>
+<p>
+Understand profitability before buying a property.
+</p>
+</div>
+
+</div>
+
+</section>
+
+<section class="container example">
+
+<h2>Example Property Analysis</h2>
 
 <p>
-Use our calculator to estimate rental income, expenses,
-and profitability before purchasing a property.
+Purchase Price: $420,000  
+<br>
+Monthly Rent: $2,400  
+<br>
+Operating Costs: $800
 </p>
 
-<a href="/roi/">
-<button>Launch Calculator</button>
-</a>
+<p>
+<strong>Result:</strong>  
+<br>
+Monthly Cashflow: $540  
+<br>
+Annual ROI: 9.1%  
+<br>
+Break-even Occupancy: 61%
+</p>
+
+<a href="/roi" class="button">Try Your Own Property</a>
 
 </section>
 
 <footer>
 
-<p>© 2026 Prorai8</p>
+Prorai8 — AI-powered property investment analysis  
+<br><br>
+© 2026 Prorai8
 
 </footer>
 
 </body>
-
 </html>
