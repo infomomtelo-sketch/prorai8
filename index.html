@@ -4,27 +4,6 @@
 <meta charset="UTF-8">
 <title>Prorai8 — Property ROI Analysis</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<script>
-const input = document.getElementById("chat-input");
-const messages = document.getElementById("chat-messages");
-
-input.addEventListener("keydown", function(e){
-
-if(e.key === "Enter"){
-
-const question = input.value;
-
-messages.innerHTML += "<div><b>You:</b> "+question+"</div>";
-
-messages.innerHTML += "<div><b>AI:</b> Property analysis feature coming soon...</div>";
-
-input.value="";
-
-}
-
-});
-
-</script> 
 <style>
 .navbar{
 background:#020617;
@@ -297,36 +276,5 @@ Prorai8 — AI-powered property investment analysis
 © 2026 Prorai8
 
 </footer>
-<div id="chatbox">
-
-<div id="chat-header">
-Prorai8 AI Advisor
-</div>
-
-<div id="chat-messages">
-Ask about any property investment...
-</div>
-
-<input
-id="chat-input"
-placeholder="Type property address or question..."
-/>
-
-</div><div id="chatbox">
-
-<div id="chat-header">
-Prorai8 AI Advisor
-</div>
-
-<div id="chat-messages">
-Ask about any property investment...
-</div>
-
-<input
-id="chat-input"
-placeholder="Type property address or question..."
-/>
-
-</div>
 </body>
 </html>
