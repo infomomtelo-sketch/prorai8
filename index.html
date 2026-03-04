@@ -108,8 +108,44 @@ padding:40px;
 color:#94a3b8;
 font-size:14px;
 }
+#chatbox{
+position:fixed;
+bottom:20px;
+right:20px;
+width:320px;
+height:420px;
+background:#020617;
+border:1px solid #1e293b;
+border-radius:12px;
+overflow:hidden;
+box-shadow:0 10px 25px rgba(0,0,0,0.4);
+display:flex;
+flex-direction:column;
+font-family:Arial;
+}
 
-</style>
+#chat-header{
+background:#0f172a;
+padding:12px;
+color:white;
+font-weight:600;
+}
+
+#chat-messages{
+flex:1;
+padding:10px;
+overflow:auto;
+font-size:14px;
+}
+
+#chat-input{
+border:none;
+border-top:1px solid #1e293b;
+padding:12px;
+outline:none;
+background:#020617;
+color:white;
+}</style>
 </head>
 
 <body>
@@ -241,58 +277,36 @@ Prorai8 — AI-powered property investment analysis
 © 2026 Prorai8
 
 </footer>
-<script>
-(function(){
-  var chat = document.createElement("div");
-  chat.innerHTML = `
-  <div id="prorai8-chat" style="
-    position:fixed;
-    bottom:20px;
-    right:20px;
-    width:320px;
-    height:420px;
-    background:#020617;
-    border:1px solid #1e293b;
-    border-radius:12px;
-    box-shadow:0 10px 30px rgba(0,0,0,0.4);
-    overflow:hidden;
-    font-family:Arial;
-  ">
-  
-  <div style="
-    background:#0f172a;
-    padding:12px;
-    font-weight:bold;
-    color:white;
-  ">
-  Prorai8 AI Advisor
-  </div>
+<div id="chatbox">
 
-  <div id="chat-messages" style="
-    padding:10px;
-    height:300px;
-    overflow:auto;
-    font-size:14px;
-  ">
-  Ask about any property...
-  </div>
+<div id="chat-header">
+Prorai8 AI Advisor
+</div>
 
-  <input id="chat-input"
-    placeholder="Type property address..."
-    style="
-      width:100%;
-      border:none;
-      padding:12px;
-      outline:none;
-      border-top:1px solid #1e293b;
-    "
-  />
+<div id="chat-messages">
+Ask about any property investment...
+</div>
 
-  </div>
-  `;
-  
-  document.body.appendChild(chat);
-})();
-</script>
+<input
+id="chat-input"
+placeholder="Type property address or question..."
+/>
+
+</div><div id="chatbox">
+
+<div id="chat-header">
+Prorai8 AI Advisor
+</div>
+
+<div id="chat-messages">
+Ask about any property investment...
+</div>
+
+<input
+id="chat-input"
+placeholder="Type property address or question..."
+/>
+
+</div>
 </body>
 </html>
