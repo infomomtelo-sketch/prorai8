@@ -22,8 +22,16 @@
       border-bottom:1px solid rgba(255,255,255,0.08);
     }
     .navbrand{ font-weight:700; letter-spacing:0.2px; }
-
-    .search-wrap{ position:relative; width:min(520px, 70vw); }
+.search-wrap{ position:relative; width:min(520px, 70vw); display:flex; gap:10px; align-items:center; }
+.search-btn{
+  padding:10px 12px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,0.14);
+  background:#0b1220;
+  color:#fff;
+  cursor:pointer;
+  white-space:nowrap;
+}    .search-wrap{ position:relative; width:min(520px, 70vw); }
     .search-input{
       width:100%;
       padding:10px 12px;
@@ -333,134 +341,163 @@
     .back-home{ padding:10px 16px; }
   </style>
 </head>
-
+ 
 <body>
- <div class="navbar">
- <div class="navbrand">Prorai8</div>
-  <div class="search-wrap">
-    <input
-      id="site-search"
-      class="search-input"
-      type="search"
-      placeholder="Search (e.g., ROI, pricing, contact)…"
-      autocomplete="off"
-    />
-    <div id="search-results" class="search-results"></div>  </div>
-</div> 
-  <!-- YOUR ROI CALCULATOR HTML (UNCHANGED from your file) -->
+<div style="padding:10px;background:#16a34a;color:white;font-weight:700;">
+  VERSION TEST: March 5
+</div>  <div class="navbar">
+    <div class="navbrand">
+      <a href="/" style="color:#fff;text-decoration:none;">Prorai8</a>
+    </div>
+
+    <form id="site-search-form" class="search-wrap" action="javascript:void(0)">
+      <input
+        id="site-search"
+        class="search-input"
+        type="search"
+        placeholder="Search (ROI, pricing, contact)…"
+        autocomplete="off"
+        enterkeyhint="search"
+      />
+      <button class="search-btn" type="submit">Search</button>
+      <div id="search-results" class="search-results"></div>
+    </form>
+  </div>
+
+  <div class="back-home">
+    <a href="/">← Back to Home</a>
+  </div>
+
+  <!-- ROI CALCULATOR (this MUST contain your calculator HTML, not just comments) -->
   <div class="wrap">
-    <!-- (keep your ROI calculator content exactly as you had it) -->
-    <!-- I’m not rewriting it here to avoid accidental edits; paste your existing ROI section here as-is -->
-  </div>
-<!-- AI BUTTON + CHATBOX -->
-<button id="ai-toggle" aria-expanded="false" aria-controls="ai-chatbox">Ask Prorai8 AI</button>
-
-<div id="ai-chatbox" role="dialog" aria-label="AI Chat">
-  <div class="chat-header">
-    <div class="chat-title">Prorai8 Assistant</div>
-    <button id="ai-close" class="chat-close" type="button" aria-label="Close">✕</button>
+    <!-- paste your FULL calculator HTML here -->
   </div>
 
-  <div id="ai-messages" class="chat-messages">
-    <div class="msg ai">Hello 👋 Ask me about ROI, rent estimates, or property deals.</div>
-  </div>
+  <!-- AI BUTTON + CHATBOX -->
+  <button id="ai-toggle" aria-expanded="false" aria-controls="ai-chatbox">Ask Prorai8 AI</button>
 
-  <form id="ai-form" class="chat-input-row">
-    <input id="ai-input" class="chat-input" type="text" placeholder="Type your question…" autocomplete="off" />
-    <button id="ai-send" class="chat-send" type="submit">Send</button>
-  </form>
-</div>  
+  <div id="ai-chatbox" role="dialog" aria-label="AI Chat">
+    <div class="chat-header">
+      <div class="chat-title">Prorai8 Assistant</div>
+      <button id="ai-close" class="chat-close" type="button" aria-label="Close">✕</button>
+    </div>
+
+    <div id="ai-messages" class="chat-messages">
+      <div class="msg ai">Hello 👋 Ask me about ROI, rent estimates, or property deals.</div>
+    </div>
+
+    <form id="ai-form" class="chat-input-row">
+      <input id="ai-input" class="chat-input" type="text" placeholder="Type your question…" autocomplete="off" />
+      <button id="ai-send" class="chat-send" type="submit">Send</button>
+    </form>
+  </div>
+ 
   <script>
-    // ===== CHATBOX =====
-const toggleBtn = document.getElementById('ai-toggle');
-const chatbox   = document.getElementById('ai-chatbox');
-const closeBtn  = document.getElementById('ai-close');
-const form      = document.getElementById('ai-form');
-const input     = document.getElementById('ai-input');
-const messages  = document.getElementById('ai-messages');
+  // ===== CHATBOX =====
+  const toggleBtn = document.getElementById('ai-toggle');
+  const chatbox   = document.getElementById('ai-chatbox');
+  const closeBtn  = document.getElementById('ai-close');
+  const chatForm  = document.getElementById('ai-form');
+  const chatInput = document.getElementById('ai-input');
+  const messages  = document.getElementById('ai-messages');
 
-if (toggleBtn && chatbox && closeBtn && form && input && messages) {
-  function openChat(){
-    chatbox.style.display = 'block';
-    toggleBtn.setAttribute('aria-expanded', 'true');
-    setTimeout(() => input.focus(), 0);
-  }
-  function closeChat(){
-    chatbox.style.display = 'none';
-    toggleBtn.setAttribute('aria-expanded', 'false');
-  }
-  function addMsg(text, who){
-    const div = document.createElement('div');
-    div.className = 'msg ' + who;
-    div.textContent = text;
-    messages.appendChild(div);
-    messages.scrollTop = messages.scrollHeight;
-  }
-
-  toggleBtn.addEventListener('click', () => {
-    const isOpen = chatbox.style.display === 'block';
-    isOpen ? closeChat() : openChat();
-  });
-
-  closeBtn.addEventListener('click', closeChat);
-
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const text = (input.value || '').trim();
-    if(!text) return;
-    addMsg(text, 'user');
-    input.value = '';
-    addMsg("Got it — you said: " + text, 'ai');
-  });
-}
-    // ===== SEARCH =====
-    const searchInput  = document.getElementById('site-search');
-    const resultsBox   = document.getElementById('search-results');
-
-    const PAGES = [
-      { title: "ROI Calculator", desc: "Estimate returns with Double-8 strategy", url: "/roi/" },
-      { title: "Pricing", desc: "Plans and what’s included", url: "/pricing" },
-      { title: "Contact", desc: "Get in touch", url: "/contact" },
-      { title: "About", desc: "What Prorai8 is building", url: "/about" }
-    ];
-
-    function renderResults(items){
-      if(!items.length){
-        resultsBox.style.display = 'none';
-        resultsBox.innerHTML = '';
-        return;
-      }
-      resultsBox.innerHTML = items.map(i => `
-        <div class="search-item" data-url="${i.url}">
-          ${i.title}
-          <small>${i.desc}</small>
-        </div>
-      `).join('');
-      resultsBox.style.display = 'block';
+  if (toggleBtn && chatbox && closeBtn && chatForm && chatInput && messages) {
+    function openChat(){
+      chatbox.style.display = 'block';
+      toggleBtn.setAttribute('aria-expanded', 'true');
+      setTimeout(() => chatInput.focus(), 0);
+    }
+    function closeChat(){
+      chatbox.style.display = 'none';
+      toggleBtn.setAttribute('aria-expanded', 'false');
+    }
+    function addMsg(text, who){
+      const div = document.createElement('div');
+      div.className = 'msg ' + who;
+      div.textContent = text;
+      messages.appendChild(div);
+      messages.scrollTop = messages.scrollHeight;
     }
 
-    searchInput.addEventListener('input', () => {
-      const q = (searchInput.value || '').trim().toLowerCase();
-      if(!q){ renderResults([]); return; }
-      const hits = PAGES
-        .filter(p => (p.title + " " + p.desc).toLowerCase().includes(q))
-        .slice(0, 6);
-      renderResults(hits);
+    toggleBtn.addEventListener('click', () => {
+      const isOpen = chatbox.style.display === 'block';
+      isOpen ? closeChat() : openChat();
     });
 
-    resultsBox.addEventListener('click', (e) => {
-      const item = e.target.closest('.search-item');
-      if(!item) return;
-      window.location.href = item.getAttribute('data-url');
-    });
+    closeBtn.addEventListener('click', closeChat);
 
-    document.addEventListener('click', (e) => {
-      if(!resultsBox.contains(e.target) && e.target !== searchInput){
-        resultsBox.style.display = 'none';
-      }
+    chatForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const text = (chatInput.value || '').trim();
+      if(!text) return;
+      addMsg(text, 'user');
+      chatInput.value = '';
+      addMsg("Got it — you said: " + text, 'ai');
     });
-  </script>
+  }
 
+  // ===== SEARCH =====
+  const searchInput  = document.getElementById('site-search');
+  const resultsBox   = document.getElementById('search-results');
+  const searchForm   = document.getElementById('site-search-form');
+
+  const PAGES = [
+    { title: "ROI Calculator", desc: "Estimate returns with Double-8 strategy", url: "/roi/" },
+    { title: "Pricing", desc: "Plans and what’s included", url: "/pricing" },
+    { title: "Contact", desc: "Get in touch", url: "/contact" },
+    { title: "About", desc: "What Prorai8 is building", url: "/about" }
+  ];
+
+  function renderResults(items){
+    if(!items.length){
+      resultsBox.style.display = 'none';
+      resultsBox.innerHTML = '';
+      return;
+    }
+    resultsBox.innerHTML = items.map(i => `
+      <div class="search-item" data-url="${i.url}">
+        ${i.title}
+        <small>${i.desc}</small>
+      </div>
+    `).join('');
+    resultsBox.style.display = 'block';
+  }
+
+  // typing search
+  searchInput?.addEventListener('input', () => {
+    const q = (searchInput.value || '').trim().toLowerCase();
+    if(!q){ renderResults([]); return; }
+    const hits = PAGES
+      .filter(p => (p.title + " " + p.desc).toLowerCase().includes(q))
+      .slice(0, 6);
+    renderResults(hits);
+  });
+
+  // Enter/Search button submit
+  searchForm?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const q = (searchInput.value || '').trim().toLowerCase();
+    if(!q){ renderResults([]); return; }
+    const hits = PAGES
+      .filter(p => (p.title + " " + p.desc).toLowerCase().includes(q))
+      .slice(0, 6);
+    renderResults(hits);
+  });
+
+  // click result
+  resultsBox?.addEventListener('click', (e) => {
+    const item = e.target.closest('.search-item');
+    if(!item) return;
+    window.location.href = item.getAttribute('data-url');
+  });
+
+  // close dropdown on outside click
+  document.addEventListener('click', (e) => {
+    if(resultsBox && !resultsBox.contains(e.target) && e.target !== searchInput){
+      resultsBox.style.display = 'none';
+    }
+  });
+</script>
   <!-- GOOGLE PLACES (optional) -->
   <script async
     src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY&libraries=places&callback=initPlaces">
