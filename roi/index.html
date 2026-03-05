@@ -288,6 +288,14 @@ color:white;
         </div>
 
         <div class="bd">
+       <div class="callout" style="display:flex; gap:10px; align-items:flex-end; flex-wrap:wrap;">
+      <div style="flex:1; min-width:240px;">
+       <label for="propertySearch">Search property address</label>
+        <input id="propertySearch" type="text" placeholder="Start typing an address…" />
+       <div class="hint" id="propertySearchHint">Select an address to auto-fill inputs.</div>
+       </div>
+      <button class="btn" id="propertyUseBtn" type="button">Use address</button>
+        </div>
           <div class="callout">
             <b>Auto (Double-8)</b> blends Long-term + Mid-term based on “demand share”.
             Adjust the demand slider to simulate how often Prorai8 flips the unit.
@@ -653,6 +661,46 @@ ${mode==="auto" ? `Blend: ${Math.round(d.longShare)}% long-term / ${Math.round(d
       setMode("auto");
 render();
 }
+// ---- Property search (Google Places Autocomplete) ----
+
+window.initPlaces = function initPlaces(){
+  const input = document.getElementById("propertySearch");
+  const hint  = document.getElementById("propertySearchHint");
+  const useBtn = document.getElementById("propertyUseBtn");
+
+  if(!input) return;
+
+  const ac = new google.maps.places.Autocomplete(input, {
+    types: ["address"],
+    componentRestrictions: { country: ["us"] }
+  });
+
+  ac.addListener("place_changed", () => {
+    selectedPlace = ac.getPlace();
+    if(!selectedPlace || !selectedPlace.formatted_address){
+      hint.textContent = "Select an address from the dropdown.";
+      return;
+    }
+    hint.textContent = "Selected: " + selectedPlace.formatted_address;
+  });
+
+  useBtn.addEventListener("click", () => {
+    if(!selectedPlace || !selectedPlace.formatted_address){
+      hint.textContent = "Pick an address from the dropdown first.";
+      return;
+    }
+
+    // Phase 1: just confirm and set a default behavior.
+    // Phase 2: call your property data API and fill the calculator inputs.
+    hint.textContent = "Using: " + selectedPlace.formatted_address + " (next: pull price/rent/tax)";
+    
+    // OPTIONAL: set a few safe defaults now (you can remove these)
+    // document.getElementById("midOccPct").value = 78;
+    // document.getElementById("midNightly").value = 145;
+
+    render(); // recalc immediately
+  });
+};
 wire(); 
 </script>
 <!-- Prorai8 AI Chat Button -->
@@ -774,6 +822,8 @@ wire();
     });
   })();
 </script>
-
+<script async
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAo7hKRwZKDbak7IcGL0CvlzvW_eE3NA2M=places&callback=initPlaces">
+</script>
 </body>
 </html>
