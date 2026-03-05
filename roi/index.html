@@ -655,9 +655,8 @@ render();
 }
 
 wire(); 
- </script>
-  
-  <script>
+</script>
+
 <button id="ai-toggle">Ask Prorai8 AI</button>
 
 <div id="ai-chatbox">
@@ -681,36 +680,10 @@ style="flex:1;padding:10px;border:none;background:#020617;color:white;"
 style="padding:10px 14px;background:#2563eb;border:none;color:white;">
 Send
 </button>
-</div>
-
-</div><button id="ai-toggle">Ask Prorai8 AI</button>
-
-<div id="ai-chatbox">
-
-<div style="padding:12px;font-weight:600;background:#111827;">
-Prorai8 AI Advisor
-</div>
-
-<div id="ai-messages" style="padding:12px;height:170px;overflow-y:auto;">
-Hello 👋 Ask me about ROI, rent estimates, or property deals.
-</div>
-
-<div style="display:flex;border-top:1px solid #1f2937;">
-<input
-id="ai-input"
-placeholder="Ask about this deal..."
-style="flex:1;padding:10px;border:none;background:#020617;color:white;"
->
-
-<button id="ai-send"
-style="padding:10px 14px;background:#2563eb;border:none;color:white;">
-Send
-</button>
 
 </div>
 
 </div>
-</script>
 
 <script>
 
@@ -718,7 +691,11 @@ const toggle = document.getElementById("ai-toggle");
 const chatbox = document.getElementById("ai-chatbox");
 
 toggle.onclick = () => {
-  chatbox.style.display = "flex";
+  if(chatbox.style.display === "flex"){
+    chatbox.style.display = "none";
+  } else {
+    chatbox.style.display = "flex";
+  }
 };
 
 const input = document.getElementById("ai-input");
@@ -734,8 +711,8 @@ send.onclick = () => {
   messages.innerHTML += `<div style="margin-top:8px;"><b>You:</b> ${text}</div>`;
 
   messages.innerHTML += `<div style="margin-top:8px;color:#9ca3af;">
-  Prorai8 AI: I'm analyzing your deal. (AI connection coming soon)
-  </div>`;
+Prorai8 AI: I'm analyzing your deal. (AI connection coming soon)
+</div>`;
 
   input.value = "";
   messages.scrollTop = messages.scrollHeight;
@@ -743,5 +720,6 @@ send.onclick = () => {
 };
 
 </script>
+
 </body>
 </html>
