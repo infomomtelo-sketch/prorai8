@@ -5,23 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Prorai8 ROI Calculator</title>
   <meta name="description" content="Estimate ROI for Prorai8’s Double-8 strategy: long-term + mid-term, auto-shifted by demand." />
-  <style>
-<head>
-#ai-chatbox{
-display:none;
-position:fixed;
-bottom:80px;
-right:20px;
-width:320px;
-height:300px;
-background:white;
-border-radius:12px;
-box-shadow:0 10px 25px rgba(0,0,0,0.2);
-overflow:hidden;
-z-index:1000;
-}
 <style>
 
+/* AI button */
 #ai-toggle{
 position:fixed;
 bottom:20px;
@@ -30,21 +16,29 @@ background:#2563eb;
 color:white;
 padding:12px 18px;
 border-radius:30px;
+border:none;
+cursor:pointer;
+z-index:1001;
 }
 
+/* AI chatbox */
 #ai-chatbox{
+display:none;
 position:fixed;
 bottom:80px;
 right:20px;
 width:320px;
-height:420px;
-display:none;
+height:300px;
+background:#020617;
+color:white;
+border-radius:12px;
+box-shadow:0 10px 25px rgba(0,0,0,0.2);
+overflow:hidden;
+z-index:1000;
 }
 
-</style>
-
-</head>
-    .navbar{
+/* navbar */
+.navbar{
 background:#020617;
 padding:18px 20px;
 border-bottom:1px solid #1e293b;
@@ -62,18 +56,18 @@ align-items:center;
 font-weight:700;
 font-size:20px;
 }
-
 .nav-links a{
 margin-left:25px;
 color:#cbd5f5;
 text-decoration:none;
 font-weight:500;
 }
-
 .nav-links a:hover{
 color:white;
-}    :root{
-      --bg:#0b0f14;
+}
+
+:root{      
+  --bg:#0b0f14;
       --card:#101722;
       --muted:#8aa0b5;
       --text:#e7eef6;
@@ -655,13 +649,15 @@ ${mode==="auto" ? `Blend: ${Math.round(d.longShare)}% long-term / ${Math.round(d
         setMode("auto");
         render();
       });
-
+      
       setMode("auto");
-      render();
-    }
+render();
+}
 
-    wire();
-    
+wire();
+
+</script>   <!-- CLOSE the calculator script here -->
+
 <button id="ai-toggle">Ask Prorai8 AI</button>
 
 <div id="ai-chatbox">
@@ -689,4 +685,3 @@ chatbox.style.display = "flex";
 
 </body>
 </html>
-
