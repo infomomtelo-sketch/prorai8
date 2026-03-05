@@ -7,22 +7,45 @@
   <meta name="description" content="Estimate ROI for Prorai8’s Double-8 strategy: long-term + mid-term, auto-shifted by demand." />
 
   <style>
-    /* ===== NAVBAR + SEARCH ===== */
-    .navbar{
-      position: sticky;
-      top: 0;
-      z-index: 999;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:16px;
-      padding:12px 16px;
-      background:#020617;
-      color:#fff;
-      border-bottom:1px solid rgba(255,255,255,0.08);
-    }
-    .navbrand{ font-weight:700; letter-spacing:0.2px; }
-.search-wrap{ position:relative; width:min(520px, 70vw); display:flex; gap:10px; align-items:center; }
+/* ===== NAVBAR + SEARCH ===== */
+.navbar{
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  padding:12px 16px;
+  background:#020617;
+  color:#fff;
+  border-bottom:1px solid rgba(255,255,255,0.08);
+}
+
+.navbrand{
+  font-weight:700;
+  letter-spacing:0.2px;
+}
+
+.search-wrap{
+  position:relative;
+  width:min(520px, 70vw);
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+
+.search-input{
+  width:100%;
+  padding:10px 12px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,0.14);
+  background:#0b1220;
+  color:#fff;
+  outline:none;
+  min-width:0;
+}
+
 .search-btn{
   padding:10px 12px;
   border-radius:10px;
@@ -31,18 +54,10 @@
   color:#fff;
   cursor:pointer;
   white-space:nowrap;
-}    .search-wrap{ position:relative; width:min(520px, 70vw); }
-    .search-input{
-      width:100%;
-      padding:10px 12px;
-      border-radius:10px;
-      border:1px solid rgba(255,255,255,0.14);
-      background:#0b1220;
-      color:#fff;
-      outline:none;
+}
+    .search-input::placeholder{ 
+      color:rgba(255,255,255,0.55);
     }
-    .search-input::placeholder{ color:rgba(255,255,255,0.55); }
-
     .search-results{
       position:absolute;
       top: calc(100% + 8px);
@@ -62,8 +77,10 @@
       border-top:1px solid rgba(255,255,255,0.06);
     }
     .search-item:first-child{ border-top:none; }
-    .search-item:hover{ background:rgba(255,255,255,0.06); }
-    .search-item small{ display:block; color:rgba(255,255,255,0.6); margin-top:2px; }
+    .search-item:hover{ background:rgba(255,255,255,0.06);
+    }
+    .search-item small{ display:block; color:rgba(255,255,255,0.6); margin-top:2px; 
+    }
 
     /* ===== CHAT BUTTON ===== */
     #ai-toggle{
