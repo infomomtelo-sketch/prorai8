@@ -657,6 +657,7 @@ render();
 wire(); 
  </script>
   
+  <script>
 <button id="ai-toggle">Ask Prorai8 AI</button>
 
 <div id="ai-chatbox">
@@ -741,35 +742,6 @@ send.onclick = () => {
 
 };
 
-</script>const toggle = document.getElementById("ai-toggle");
-const chatbox = document.getElementById("ai-chatbox");
-
-toggle.onclick = () => {
-  chatbox.style.display = "flex";
-};
-
-const input = document.getElementById("ai-input");
-const send = document.getElementById("ai-send");
-const messages = document.getElementById("ai-messages");
-
-send.onclick = () => {
-
-  const text = input.value;
-
-  if(!text) return;
-
-  messages.innerHTML += `<div style="margin-top:8px;"><b>You:</b> ${text}</div>`;
-
-  messages.innerHTML += `<div style="margin-top:8px;color:#9ca3af;">
-  Prorai8 AI: I'm analyzing your deal. (AI connection coming soon)
-  </div>`;
-
-  input.value = "";
-  messages.scrollTop = messages.scrollHeight;
-
-};
-
 </script>
-
 </body>
 </html>
