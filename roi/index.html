@@ -655,68 +655,124 @@ render();
 }
 wire(); 
 </script>
-  
-<script>
-<button id="ai-toggle">Ask Prorai8 AI</button>
+<!-- Prorai8 AI Chat Button -->
+<button id="ai-toggle" type="button">Ask Prorai8 AI</button>
 
+<!-- Prorai8 AI Chatbox -->
 <div id="ai-chatbox">
+  <div id="ai-header">Prorai8 AI Advisor</div>
 
-<div style="padding:12px;font-weight:600;background:#111827;">
-Prorai8 AI Advisor
+  <div id="ai-messages">
+    <div class="ai-msg ai-bot">Hello 👋 Ask me about ROI, rent estimates, or property deals.</div>
+  </div>
+
+  <div id="ai-inputrow">
+    <input id="ai-input" type="text" placeholder="Ask about this deal..." />
+    <button id="ai-send" type="button">Send</button>
+  </div>
 </div>
 
-<div id="ai-messages" style="padding:12px;height:170px;overflow-y:auto;">
-Hello 👋 Ask me about ROI, rent estimates, or property deals.
-</div>
+<style>
+  /* Keep your existing #ai-toggle and #ai-chatbox styles at the top.
+     These styles only fix the inside layout so input appears. */
 
-<div style="display:flex;border-top:1px solid #1f2937;">
-<input
-id="ai-input"
-placeholder="Ask about this deal..."
-style="flex:1;padding:10px;border:none;background:#020617;color:white;"
->
-
-<button id="ai-send"
-style="padding:10px 14px;background:#2563eb;border:none;color:white;">
-Send
-</button>
-
-</div>
-
-</div>
-
-const toggle = document.getElementById("ai-toggle");
-const chatbox = document.getElementById("ai-chatbox");
-
-toggle.onclick = () => {
-  if(chatbox.style.display === "flex"){
-    chatbox.style.display = "none";
-  } else {
-    chatbox.style.display = "flex";
+  #ai-chatbox{
+    /* your existing styles already set position/size/colors */
+    /* add this to make inner layout predictable */
+    display:none;
   }
-};
 
-const input = document.getElementById("ai-input");
-const send = document.getElementById("ai-send");
-const messages = document.getElementById("ai-messages");
+  #ai-header{
+    padding:12px;
+    font-weight:600;
+    background:#111827;
+  }
 
-send.onclick = () => {
+  #ai-messages{
+    padding:12px;
+    height:170px;
+    overflow-y:auto;
+    font-size:14px;
+  }
 
-  const text = input.value;
+  #ai-inputrow{
+    display:flex !important;
+    gap:10px !important;
+    padding:10px !important;
+    border-top:1px solid #1f2937;
+    align-items:center !important;
+  }
 
-  if(!text) return;
+  #ai-input{
+    flex:1 1 auto !important;
+    min-width:140px !important;
+    height:40px !important;
+    padding:10px !important;
+    border:1px solid #334155 !important;
+    border-radius:10px !important;
+    background:#ffffff !important;
+    color:#0f172a !important;
+    box-sizing:border-box !important;
+    outline:none !important;
+  }
 
-  messages.innerHTML += `<div style="margin-top:8px;"><b>You:</b> ${text}</div>`;
+  #ai-send{
+    flex:0 0 auto !important;
+    width:auto !important;
+    min-width:84px !important;
+    height:40px !important;
+    padding:0 14px !important;
+    border:none !important;
+    border-radius:10px !important;
+    background:#2563eb !important;
+    color:white !important;
+    cursor:pointer !important;
+    display:inline-flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+  }
 
-  messages.innerHTML += `<div style="margin-top:8px;color:#9ca3af;">
-Prorai8 AI: I'm analyzing your deal. (AI connection coming soon)
-</div>`;
+  .ai-msg{ margin-top:8px; }
+  .ai-bot{ color:#cbd5e1; }
+</style>
 
-  input.value = "";
-  messages.scrollTop = messages.scrollHeight;
+<script>
+  (function(){
+    const toggle = document.getElementById("ai-toggle");
+    const chatbox = document.getElementById("ai-chatbox");
+    const input = document.getElementById("ai-input");
+    const send = document.getElementById("ai-send");
+    const messages = document.getElementById("ai-messages");
 
-};
+    function pushLine(html){
+      const wrap = document.createElement("div");
+      wrap.className = "ai-msg";
+      wrap.innerHTML = html;
+      messages.appendChild(wrap);
+      messages.scrollTop = messages.scrollHeight;
+    }
 
+    function sendMessage(){
+      const text = (input.value || "").trim();
+      if(!text) return;
+
+      pushLine("<b>You:</b> " + text);
+      pushLine('<span style="color:#9ca3af">Prorai8 AI: I\\'m analyzing your deal. (AI connection coming soon)</span>');
+
+      input.value = "";
+      input.focus();
+    }
+
+    toggle.addEventListener("click", () => {
+      chatbox.style.display = (chatbox.style.display === "block") ? "none" : "block";
+      if(chatbox.style.display === "block") setTimeout(()=> input.focus(), 50);
+    });
+
+    send.addEventListener("click", sendMessage);
+    input.addEventListener("keydown", (e) => {
+      if(e.key === "Enter") sendMessage();
+    });
+  })();
 </script>
 
 </body>
