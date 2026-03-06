@@ -445,7 +445,7 @@
       bottom:80px;
       right:20px;
       width:340px;
-      height:380px;
+      height:430px;
       background:#020617;
       color:white;
       border-radius:14px;
@@ -483,7 +483,7 @@
     }
 
     .chat-messages{
-      height:calc(380px - 52px - 56px);
+      height:210px;
       padding:12px;
       overflow:auto;
     }
@@ -506,6 +506,27 @@
     .msg.ai{
       background:#0b1220;
       border:1px solid rgba(255,255,255,0.10);
+    }
+
+    .chat-suggestions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      padding:0 12px 12px;
+    }
+
+    .suggestion-chip{
+      border:1px solid rgba(255,255,255,0.12);
+      background:rgba(255,255,255,0.06);
+      color:#e7eef6;
+      border-radius:999px;
+      padding:8px 10px;
+      font-size:12px;
+      cursor:pointer;
+    }
+
+    .suggestion-chip:hover{
+      background:rgba(255,255,255,0.10);
     }
 
     .chat-input-row{
@@ -537,6 +558,11 @@
       background:#2563eb;
       color:#fff;
       cursor:pointer;
+    }
+
+    /* Google Places dropdown */
+    .pac-container{
+      z-index:2000 !important;
     }
 
     @media (max-width:980px){
@@ -635,14 +661,16 @@
           </div>
 
           <div class="row">
-           <div>
+            <div>
               <label for="propertyAddress">Property address</label>
               <input id="propertyAddress" type="text" placeholder="Start typing an address..." />
-            </div>            
+            </div>
+
             <div>
               <label for="purchasePrice">Purchase price ($)</label>
               <input id="purchasePrice" type="number" min="0" step="1000" value="420000" />
             </div>
+
             <div>
               <label for="downPaymentPct">Down payment (%)</label>
               <input id="downPaymentPct" type="number" min="0" max="100" step="0.1" value="20" />
@@ -652,6 +680,7 @@
               <label for="interestRate">Interest rate (APR %)</label>
               <input id="interestRate" type="number" min="0" step="0.01" value="6.75" />
             </div>
+
             <div>
               <label for="loanYears">Loan term (years)</label>
               <input id="loanYears" type="number" min="1" step="1" value="30" />
@@ -661,6 +690,7 @@
               <label for="propertyTaxMonthly">Property tax (monthly $)</label>
               <input id="propertyTaxMonthly" type="number" min="0" step="10" value="420" />
             </div>
+
             <div>
               <label for="insuranceMonthly">Insurance (monthly $)</label>
               <input id="insuranceMonthly" type="number" min="0" step="10" value="140" />
@@ -670,6 +700,7 @@
               <label for="hoaMonthly">HOA (monthly $)</label>
               <input id="hoaMonthly" type="number" min="0" step="10" value="0" />
             </div>
+
             <div>
               <label for="maintenancePct">Maintenance reserve (% of revenue)</label>
               <input id="maintenancePct" type="number" min="0" step="0.1" value="7" />
@@ -683,6 +714,7 @@
               <label for="longRent">Long-term rent (monthly $)</label>
               <input id="longRent" type="number" min="0" step="25" value="2350" />
             </div>
+
             <div>
               <label for="longVacancyPct">Long-term vacancy (% of month)</label>
               <input id="longVacancyPct" type="number" min="0" max="100" step="0.1" value="4" />
@@ -692,6 +724,7 @@
               <label for="midNightly">Mid-term avg nightly rate ($)</label>
               <input id="midNightly" type="number" min="0" step="5" value="145" />
             </div>
+
             <div>
               <label for="midOccPct">Mid-term occupancy (%)</label>
               <input id="midOccPct" type="number" min="0" max="100" step="0.1" value="78" />
@@ -701,6 +734,7 @@
               <label for="midOpsPct">Mid-term ops (% of mid-term revenue)</label>
               <input id="midOpsPct" type="number" min="0" max="100" step="0.1" value="22" />
             </div>
+
             <div>
               <label for="mgmtPct">Management fee (% of revenue)</label>
               <input id="mgmtPct" type="number" min="0" max="100" step="0.1" value="8" />
@@ -776,7 +810,7 @@
               <tr><td>Gross revenue</td><td id="rowRevenue">$0</td></tr>
               <tr><td>Operating costs</td><td id="rowOps">$0</td></tr>
               <tr><td>Fixed costs</td><td id="rowFixed">$0</td></tr>
-              <tr><td>Mortgage (P&I)</td><td id="rowMortgage">$0</td></tr>
+              <tr><td>Mortgage (P&amp;I)</td><td id="rowMortgage">$0</td></tr>
               <tr><td><b>Net cashflow</b></td><td id="rowNet"><b>$0</b></td></tr>
             </tbody>
           </table>
@@ -797,6 +831,13 @@
 
     <div id="ai-messages" class="chat-messages">
       <div class="msg ai">Hello 👋 Ask me about ROI, cashflow, pricing, or which mode to use.</div>
+    </div>
+
+    <div class="chat-suggestions">
+      <button type="button" class="suggestion-chip">What price makes this property profitable?</button>
+      <button type="button" class="suggestion-chip">What rent do I need to break even?</button>
+      <button type="button" class="suggestion-chip">Should I use long-term or mid-term mode?</button>
+      <button type="button" class="suggestion-chip">How much down payment improves cashflow?</button>
     </div>
 
     <form id="ai-form" class="chat-input-row">
@@ -1021,20 +1062,142 @@ ${mode === "auto" ? `Blend: ${Math.round(d.longShare)}% long-term / ${Math.round
 
     function localAssistantReply(text){
       const t = (text || "").toLowerCase();
+      const d = readInputs();
 
-      if (t.includes("roi") || t.includes("cashflow")) {
-        return "Focus on purchase price, rent, down payment, interest rate, and total operating costs. Auto mode helps compare mixed use assumptions quickly.";
+      const monthlyNet = d.net;
+      const annualNet = d.net * 12;
+      const currentPrice = d.purchase;
+      const currentRevenue = d.grossRevenue;
+      const currentFixed = d.fixed;
+      const currentOps = d.operating;
+      const currentMortgage = d.mort;
+
+      const breakEvenRevenue = currentOps + currentFixed + currentMortgage;
+      const revenueGap = breakEvenRevenue - currentRevenue;
+
+      const downPct = Number($("downPaymentPct").value || 0) / 100;
+      const rate = Number($("interestRate").value || 0);
+      const years = Number($("loanYears").value || 30);
+
+      function paymentForPrice(price){
+        const down = price * downPct;
+        const loan = Math.max(0, price - down);
+        return mortgagePI(loan, rate, years);
       }
-      if (t.includes("long")) {
-        return "Long-term mode is better for stability. Use monthly rent and vacancy assumptions to see conservative cashflow.";
+
+      function netForPrice(price){
+        const mort = paymentForPrice(price);
+        return currentRevenue - currentOps - currentFixed - mort;
       }
-      if (t.includes("mid")) {
-        return "Mid-term mode is useful when you expect stronger occupancy and higher nightly rates, but also higher operating costs.";
+
+      function findBreakEvenPrice(){
+        let low = 0;
+        let high = currentPrice * 2;
+        for(let i = 0; i < 50; i++){
+          const mid = (low + high) / 2;
+          const net = netForPrice(mid);
+          if(net >= 0){
+            low = mid;
+          } else {
+            high = mid;
+          }
+        }
+        return low;
       }
-      if (t.includes("pricing")) {
-        return "Your pricing page can explain how Prorai8 helps owners compare long-term, mid-term, and blended strategies.";
+
+      const breakEvenPrice = findBreakEvenPrice();
+
+      function requiredLongRentForBreakEven(){
+        const vacancyPct = Number($("longVacancyPct").value || 0) / 100;
+        if(mode === "long"){
+          const mgmtPct = Number($("mgmtPct").value || 0) / 100;
+          const maintPct = Number($("maintenancePct").value || 0) / 100;
+          const netMultiplier = 1 - mgmtPct - maintPct;
+          const neededGross = (currentFixed + currentMortgage) / Math.max(netMultiplier, 0.01);
+          return neededGross / Math.max(1 - vacancyPct, 0.01);
+        }
+        return 0;
       }
-      return "Ask me about ROI, cashflow, long-term vs mid-term mode, or which numbers to change first.";
+
+      const neededLongRent = requiredLongRentForBreakEven();
+
+      if (t.includes("what price makes this property profitable") || t.includes("price makes this property profitable") || t.includes("profitable price")) {
+        if(monthlyNet >= 0){
+          return `At the current numbers, this property is already profitable at about ${fmtMoney2(monthlyNet)} per month. Your current purchase price is ${fmtMoney(currentPrice)}.`;
+        }
+        return `At the current assumptions, this property is losing about ${fmtMoney2(Math.abs(monthlyNet))} per month. To reach break-even, the purchase price would need to be around ${fmtMoney(Math.round(breakEvenPrice))} or lower, assuming the same down payment, rate, rent, and expenses.`;
+      }
+
+      if (t.includes("what rent do i need to break even") || t.includes("rent do i need") || t.includes("break even rent")) {
+        if(monthlyNet >= 0){
+          return `You are already above break-even. At the current setup, the property is generating about ${fmtMoney2(monthlyNet)} per month in cashflow.`;
+        }
+
+        if(mode === "long"){
+          return `To break even in Long-term mode, you would need about ${fmtMoney(Math.ceil(neededLongRent))} per month in rent, based on your current vacancy, financing, and expense assumptions. Right now you are using ${fmtMoney(Number($("longRent").value || 0))}.`;
+        }
+
+        return `At the current setup, you are short by about ${fmtMoney2(revenueGap)} per month. That means you need roughly that much more monthly revenue to break even, either through higher rent, better occupancy, or lower costs.`;
+      }
+
+      if (t.includes("should i use long-term or mid-term") || t.includes("long-term or mid-term") || t.includes("which mode")) {
+        const savedMode = mode;
+
+        mode = "long";
+        const longNet = readInputs().net;
+
+        mode = "mid";
+        const midNet = readInputs().net;
+
+        mode = "auto";
+        const autoNet = readInputs().net;
+
+        mode = savedMode;
+        render();
+
+        if(midNet > longNet && midNet > autoNet){
+          return `Based on your current assumptions, Mid-term performs best. Estimated monthly cashflow is ${fmtMoney2(midNet)} in Mid-term mode versus ${fmtMoney2(longNet)} in Long-term mode and ${fmtMoney2(autoNet)} in Auto mode.`;
+        }
+
+        if(longNet > midNet && longNet > autoNet){
+          return `Based on your current assumptions, Long-term performs best. Estimated monthly cashflow is ${fmtMoney2(longNet)} in Long-term mode versus ${fmtMoney2(midNet)} in Mid-term mode and ${fmtMoney2(autoNet)} in Auto mode.`;
+        }
+
+        return `Based on your current assumptions, Auto mode performs best. Estimated monthly cashflow is ${fmtMoney2(autoNet)} in Auto mode versus ${fmtMoney2(longNet)} in Long-term mode and ${fmtMoney2(midNet)} in Mid-term mode.`;
+      }
+
+      if (t.includes("how much down payment improves cashflow") || t.includes("down payment improves cashflow") || t.includes("more down payment")) {
+        const currentPct = Number($("downPaymentPct").value || 0);
+
+        function netAtDownPct(pct){
+          const purchase = Number($("purchasePrice").value || 0);
+          const down = purchase * (pct / 100);
+          const loan = Math.max(0, purchase - down);
+          const mort = mortgagePI(loan, rate, years);
+          return currentRevenue - currentOps - currentFixed - mort;
+        }
+
+        const plus10 = Math.min(currentPct + 10, 100);
+        const currentNet = netAtDownPct(currentPct);
+        const improvedNet = netAtDownPct(plus10);
+        const gain = improvedNet - currentNet;
+
+        if(plus10 === currentPct){
+          return `Your down payment is already at ${currentPct.toFixed(0)}%, so there is no higher 10% step to test.`;
+        }
+
+        return `If you increase the down payment from ${currentPct.toFixed(0)}% to ${plus10.toFixed(0)}%, your monthly cashflow improves by about ${fmtMoney2(gain)} per month, changing from ${fmtMoney2(currentNet)} to ${fmtMoney2(improvedNet)}.`;
+      }
+
+      if (t.includes("roi")) {
+        return `At the current assumptions, estimated monthly cashflow is ${fmtMoney2(monthlyNet)}, annual net is ${fmtMoney2(annualNet)}, and cash-on-cash ROI is ${$("kpiRoi").textContent}.`;
+      }
+
+      if (t.includes("cashflow")) {
+        return `Current estimated cashflow is ${fmtMoney2(monthlyNet)} per month. Gross revenue is ${fmtMoney2(currentRevenue)}, operating costs are ${fmtMoney2(currentOps)}, fixed costs are ${fmtMoney2(currentFixed)}, and mortgage is ${fmtMoney2(currentMortgage)}.`;
+      }
+
+      return `At the current setup, monthly cashflow is ${fmtMoney2(monthlyNet)} and annual net is ${fmtMoney2(annualNet)}. Ask me things like “What price makes this property profitable?” or “What rent do I need to break even?”`;
     }
 
     function wireChat(){
@@ -1047,12 +1210,14 @@ ${mode === "auto" ? `Blend: ${Math.round(d.longShare)}% long-term / ${Math.round
 
       function openChat(){
         chatbox.style.display = "block";
+        toggleBtn.style.display = "none";
         toggleBtn.setAttribute("aria-expanded", "true");
         setTimeout(() => chatInput.focus(), 0);
       }
 
       function closeChat(){
         chatbox.style.display = "none";
+        toggleBtn.style.display = "block";
         toggleBtn.setAttribute("aria-expanded", "false");
       }
 
@@ -1078,6 +1243,14 @@ ${mode === "auto" ? `Blend: ${Math.round(d.longShare)}% long-term / ${Math.round
         addMsg(text, "user");
         chatInput.value = "";
         addMsg(localAssistantReply(text), "ai");
+      });
+
+      document.querySelectorAll(".suggestion-chip").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const text = btn.textContent.trim();
+          chatInput.value = text;
+          chatForm.requestSubmit();
+        });
       });
     }
 
@@ -1145,29 +1318,31 @@ ${mode === "auto" ? `Blend: ${Math.round(d.longShare)}% long-term / ${Math.round
       });
     }
 
+    function initPlaces(){
+      const input = document.getElementById("propertyAddress");
+      if(!input || !window.google || !google.maps || !google.maps.places) return;
+
+      const autocomplete = new google.maps.places.Autocomplete(input, {
+        types:["address"],
+        componentRestrictions:{ country:"us" }
+      });
+
+      autocomplete.addListener("place_changed", function(){
+        const place = autocomplete.getPlace();
+        if(place && place.formatted_address){
+          console.log("Selected place:", place.formatted_address);
+        }
+      });
+    }
+
     wireCalculator();
     wireChat();
     wireSearch();
+    window.initPlaces = initPlaces;
   </script>
-  <script>
-function initPlaces(){
-  const input = document.getElementById("propertyAddress");
-  if(!input) return;
 
-  const autocomplete = new google.maps.places.Autocomplete(input,{
-    types:["address"],
-    componentRestrictions:{country:"us"}
-  });
-
-  autocomplete.addListener("place_changed",function(){
-    const place = autocomplete.getPlace();
-    console.log("Selected place:", place.formatted_address);
-  });
-}
-</script>
-
-<script async
-src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAo7hKRwZKDbak7IcGL0CvlzvW_eE3NA2M&libraries=places&callback=initPlaces">
-</script>
+  <script async
+    src="https://maps.googleapis.com/maps/api/js?key=&libraries=places&callback=initPlaces">
+  </script>
 </body>
 </html>
