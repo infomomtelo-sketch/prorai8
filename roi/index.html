@@ -4,63 +4,122 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Prorai8 ROI Calculator</title>
-  <meta name="description" content="Estimate ROI for Prorai8’s Double-8 strategy: long-term + mid-term, auto-shifted by demand." />
+  <meta
+    name="description"
+    content="Estimate ROI for Prorai8’s Double-8 strategy: long-term + mid-term, auto-shifted by demand."
+  />
 
   <style>
-/* ===== NAVBAR + SEARCH ===== */
-.navbar{
-  position: sticky;
-  top: 0;
-  z-index: 999;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:16px;
-  padding:12px 16px;
-  background:#020617;
-  color:#fff;
-  border-bottom:1px solid rgba(255,255,255,0.08);
-}
+    :root{
+      --bg:#0b0f14;
+      --card:#101722;
+      --muted:#8aa0b5;
+      --text:#e7eef6;
+      --line:#1f2c3a;
+      --good:#46d39a;
+      --warn:#ffcc66;
+      --bad:#ff6b6b;
+      --accent:#6aa9ff;
+      --shadow:0 18px 40px rgba(0,0,0,.35);
+      --radius:16px;
+    }
 
-.navbrand{
-  font-weight:700;
-  letter-spacing:0.2px;
-}
+    *{ box-sizing:border-box; }
 
-.search-wrap{
-  position:relative;
-  width:min(520px, 70vw);
-  display:flex;
-  gap:10px;
-  align-items:center;
-}
+    body{
+      margin:0;
+      font-family:ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      background:
+        radial-gradient(1200px 700px at 70% -10%, rgba(106,169,255,.18), transparent 55%),
+        radial-gradient(900px 650px at 10% 0%, rgba(70,211,154,.12), transparent 60%),
+        var(--bg);
+      color:var(--text);
+      line-height:1.4;
+    }
 
-.search-input{
-  width:100%;
-  padding:10px 12px;
-  border-radius:10px;
-  border:1px solid rgba(255,255,255,0.14);
-  background:#0b1220;
-  color:#fff;
-  outline:none;
-  min-width:0;
-}
+    a{
+      color:var(--accent);
+      text-decoration:none;
+    }
 
-.search-btn{
-  padding:10px 12px;
-  border-radius:10px;
-  border:1px solid rgba(255,255,255,0.14);
-  background:#0b1220;
-  color:#fff;
-  cursor:pointer;
-  white-space:nowrap;
-}
-    .search-input::placeholder{ 
+    a:hover{
+      text-decoration:underline;
+    }
+
+    /* ===== NAVBAR ===== */
+    .navbar{
+      position:sticky;
+      top:0;
+      z-index:999;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      padding:12px 16px;
+      background:#020617;
+      color:#fff;
+      border-bottom:1px solid rgba(255,255,255,0.08);
+    }
+
+    .navbrand{
+      font-weight:700;
+      letter-spacing:.2px;
+      white-space:nowrap;
+    }
+
+    .nav-links{
+      display:flex;
+      gap:18px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+
+    .nav-links a{
+      color:#cbd5e1;
+      text-decoration:none;
+      font-size:14px;
+    }
+
+    .nav-links a:hover{
+      color:#fff;
+    }
+
+    .search-wrap{
+      position:relative;
+      width:min(420px, 100%);
+      display:flex;
+      gap:10px;
+      align-items:center;
+    }
+
+    .search-input{
+      width:100%;
+      padding:10px 12px;
+      border-radius:10px;
+      border:1px solid rgba(255,255,255,0.14);
+      background:#0b1220;
+      color:#fff;
+      outline:none;
+      min-width:0;
+    }
+
+    .search-input::placeholder{
       color:rgba(255,255,255,0.55);
     }
+
+    .search-btn{
+      padding:10px 12px;
+      border-radius:10px;
+      border:1px solid rgba(255,255,255,0.14);
+      background:#0b1220;
+      color:#fff;
+      cursor:pointer;
+      white-space:nowrap;
+    }
+
     .search-results{
       position:absolute;
-      top: calc(100% + 8px);
+      top:calc(100% + 8px);
       left:0;
       right:0;
       background:#0b1220;
@@ -69,20 +128,304 @@
       overflow:hidden;
       box-shadow:0 14px 40px rgba(0,0,0,0.35);
       display:none;
+      z-index:1002;
     }
+
     .search-item{
       padding:10px 12px;
       cursor:pointer;
       color:#fff;
       border-top:1px solid rgba(255,255,255,0.06);
     }
-    .search-item:first-child{ border-top:none; }
-    .search-item:hover{ background:rgba(255,255,255,0.06);
-    }
-    .search-item small{ display:block; color:rgba(255,255,255,0.6); margin-top:2px; 
+
+    .search-item:first-child{
+      border-top:none;
     }
 
-    /* ===== CHAT BUTTON ===== */
+    .search-item:hover{
+      background:rgba(255,255,255,0.06);
+    }
+
+    .search-item small{
+      display:block;
+      color:rgba(255,255,255,0.6);
+      margin-top:2px;
+    }
+
+    .back-home{
+      padding:12px 16px 0;
+    }
+
+    .back-home a{
+      display:inline-block;
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.05);
+      color:var(--text);
+      text-decoration:none;
+    }
+
+    .back-home a:hover{
+      filter:brightness(1.08);
+      text-decoration:none;
+    }
+
+    /* ===== MAIN LAYOUT ===== */
+    .wrap{
+      max-width:1100px;
+      margin:0 auto;
+      padding:28px 18px 60px;
+    }
+
+    header{
+      display:flex;
+      gap:18px;
+      flex-wrap:wrap;
+      align-items:flex-end;
+      justify-content:space-between;
+      padding:12px 2px 18px;
+      border-bottom:1px solid rgba(255,255,255,.06);
+      margin-bottom:18px;
+    }
+
+    .brand h1{
+      margin:0;
+      font-size:28px;
+      letter-spacing:.2px;
+    }
+
+    .brand p{
+      margin:6px 0 0;
+      color:var(--muted);
+      max-width:680px;
+    }
+
+    .pillbar{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:flex-end;
+    }
+
+    .pill{
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.04);
+      padding:8px 10px;
+      border-radius:999px;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:1.1fr .9fr;
+      gap:16px;
+      margin-top:16px;
+    }
+
+    .card{
+      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+
+    .card .hd{
+      padding:14px 16px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      border-bottom:1px solid rgba(255,255,255,.06);
+      background:rgba(16,23,34,.55);
+    }
+
+    .card .hd h2{
+      margin:0;
+      font-size:16px;
+    }
+
+    .card .bd{
+      padding:16px;
+    }
+
+    .row{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+    }
+
+    label{
+      display:block;
+      font-size:12px;
+      color:var(--muted);
+      margin-bottom:6px;
+    }
+
+    input, select{
+      width:100%;
+      padding:10px 10px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(0,0,0,.22);
+      color:var(--text);
+      outline:none;
+    }
+
+    input:focus, select:focus{
+      border-color:rgba(106,169,255,.55);
+      box-shadow:0 0 0 4px rgba(106,169,255,.12);
+    }
+
+    .hint{
+      margin-top:8px;
+      font-size:12px;
+      color:var(--muted);
+    }
+
+    .modeTabs{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+
+    .tab{
+      cursor:pointer;
+      padding:8px 10px;
+      font-size:13px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.03);
+      color:var(--muted);
+      user-select:none;
+    }
+
+    .tab[aria-selected="true"]{
+      background:rgba(106,169,255,.18);
+      border-color:rgba(106,169,255,.45);
+      color:var(--text);
+    }
+
+    .kpis{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+    }
+
+    .kpi{
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(0,0,0,.18);
+      border-radius:14px;
+      padding:12px;
+    }
+
+    .kpi .t{
+      font-size:12px;
+      color:var(--muted);
+    }
+
+    .kpi .v{
+      font-size:18px;
+      margin-top:6px;
+    }
+
+    .kpi .s{
+      font-size:12px;
+      margin-top:6px;
+      color:var(--muted);
+    }
+
+    .good{ color:var(--good); }
+    .warn{ color:var(--warn); }
+    .bad{ color:var(--bad); }
+
+    .split{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:space-between;
+      margin-top:10px;
+      padding-top:12px;
+      border-top:1px solid rgba(255,255,255,.06);
+    }
+
+    .btn{
+      cursor:pointer;
+      border:none;
+      border-radius:12px;
+      padding:10px 12px;
+      background:rgba(70,211,154,.18);
+      color:var(--text);
+      border:1px solid rgba(70,211,154,.35);
+      font-weight:600;
+    }
+
+    .btn:hover{
+      filter:brightness(1.06);
+    }
+
+    .btn.secondary{
+      background:rgba(255,255,255,.05);
+      border-color:rgba(255,255,255,.10);
+      color:var(--muted);
+      font-weight:600;
+    }
+
+    .small{
+      font-size:12px;
+      color:var(--muted);
+    }
+
+    .table{
+      width:100%;
+      border-collapse:separate;
+      border-spacing:0;
+      overflow:hidden;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(0,0,0,.12);
+    }
+
+    .table th, .table td{
+      padding:10px 10px;
+      border-bottom:1px solid rgba(255,255,255,.06);
+      font-size:13px;
+    }
+
+    .table th{
+      color:var(--muted);
+      font-weight:600;
+      text-align:left;
+    }
+
+    .table tr:last-child td{
+      border-bottom:none;
+    }
+
+    .foot{
+      margin-top:14px;
+      font-size:12px;
+      color:var(--muted);
+    }
+
+    .callout{
+      border:1px solid rgba(106,169,255,.22);
+      background:rgba(106,169,255,.08);
+      padding:12px;
+      border-radius:14px;
+      margin-bottom:12px;
+      color:var(--text);
+    }
+
+    .callout b{
+      color:#dfeaff;
+    }
+
+    /* ===== CHAT ===== */
     #ai-toggle{
       position:fixed;
       bottom:20px;
@@ -96,7 +439,6 @@
       z-index:1001;
     }
 
-    /* ===== CHATBOX ===== */
     #ai-chatbox{
       display:none;
       position:fixed;
@@ -112,6 +454,7 @@
       z-index:1000;
       border:1px solid rgba(255,255,255,0.10);
     }
+
     .chat-header{
       display:flex;
       align-items:center;
@@ -120,7 +463,12 @@
       background:#0b1220;
       border-bottom:1px solid rgba(255,255,255,0.10);
     }
-    .chat-title{ font-weight:700; font-size:14px; }
+
+    .chat-title{
+      font-weight:700;
+      font-size:14px;
+    }
+
     .chat-close{
       background:transparent;
       border:none;
@@ -129,24 +477,36 @@
       cursor:pointer;
       opacity:0.85;
     }
-    .chat-close:hover{ opacity:1; }
+
+    .chat-close:hover{
+      opacity:1;
+    }
 
     .chat-messages{
-      height: calc(380px - 52px - 56px);
+      height:calc(380px - 52px - 56px);
       padding:12px;
       overflow:auto;
     }
+
     .msg{
-      margin: 0 0 10px 0;
+      margin:0 0 10px 0;
       padding:10px 12px;
       border-radius:12px;
-      max-width: 90%;
+      max-width:90%;
       line-height:1.35;
       font-size:14px;
       white-space:pre-wrap;
     }
-    .msg.user{ background:#2563eb; margin-left:auto; }
-    .msg.ai{ background:#0b1220; border:1px solid rgba(255,255,255,0.10); }
+
+    .msg.user{
+      background:#2563eb;
+      margin-left:auto;
+    }
+
+    .msg.ai{
+      background:#0b1220;
+      border:1px solid rgba(255,255,255,0.10);
+    }
 
     .chat-input-row{
       display:flex;
@@ -155,6 +515,7 @@
       border-top:1px solid rgba(255,255,255,0.10);
       background:#0b1220;
     }
+
     .chat-input{
       flex:1;
       padding:10px 12px;
@@ -164,7 +525,11 @@
       color:#fff;
       outline:none;
     }
-    .chat-input::placeholder{ color:rgba(255,255,255,0.55); }
+
+    .chat-input::placeholder{
+      color:rgba(255,255,255,0.55);
+    }
+
     .chat-send{
       padding:10px 12px;
       border-radius:10px;
@@ -174,197 +539,45 @@
       cursor:pointer;
     }
 
-    /* ===== YOUR EXISTING ROI STYLES (kept) ===== */
-    :root{
-      --bg:#0b0f14;
-      --card:#101722;
-      --muted:#8aa0b5;
-      --text:#e7eef6;
-      --line:#1f2c3a;
-      --good:#46d39a;
-      --warn:#ffcc66;
-      --bad:#ff6b6b;
-      --accent:#6aa9ff;
-      --shadow: 0 18px 40px rgba(0,0,0,.35);
-      --radius: 16px;
+    @media (max-width:980px){
+      .grid{ grid-template-columns:1fr; }
     }
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
-      background: radial-gradient(1200px 700px at 70% -10%, rgba(106,169,255,.18), transparent 55%),
-                  radial-gradient(900px 650px at 10% 0%, rgba(70,211,154,.12), transparent 60%),
-                  var(--bg);
-      color:var(--text);
-      line-height:1.4;
+
+    @media (max-width:900px){
+      .navbar{ flex-wrap:wrap; }
+      .nav-links{
+        width:100%;
+        justify-content:flex-start;
+        flex-wrap:wrap;
+        gap:12px;
+      }
+      .search-wrap{ width:100%; }
     }
-    a{color:var(--accent); text-decoration:none}
-    a:hover{text-decoration:underline}
-    .wrap{max-width:1100px; margin:0 auto; padding:28px 18px 60px;}
-    header{
-      display:flex; gap:18px; flex-wrap:wrap; align-items:flex-end; justify-content:space-between;
-      padding:12px 2px 18px;
-      border-bottom:1px solid rgba(255,255,255,.06);
-      margin-bottom:18px;
+
+    @media (max-width:520px){
+      .row{ grid-template-columns:1fr; }
+      .kpis{ grid-template-columns:1fr; }
+      #ai-chatbox{
+        right:10px;
+        left:10px;
+        width:auto;
+      }
     }
-    .brand h1{margin:0; font-size:28px; letter-spacing:.2px}
-    .brand p{margin:6px 0 0; color:var(--muted); max-width:680px}
-    .pillbar{display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:flex-end}
-    .pill{
-      border:1px solid rgba(255,255,255,.10);
-      background:rgba(255,255,255,.04);
-      padding:8px 10px; border-radius:999px; color:var(--muted);
-      font-size:13px;
-    }
-    .grid{
-      display:grid;
-      grid-template-columns: 1.1fr .9fr;
-      gap:16px;
-      margin-top:16px;
-    }
-    @media (max-width: 980px){
-      .grid{grid-template-columns:1fr}
-    }
-    .card{
-      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
-      border:1px solid rgba(255,255,255,.08);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      overflow:hidden;
-    }
-    .card .hd{
-      padding:14px 16px;
-      display:flex; align-items:center; justify-content:space-between; gap:10px;
-      border-bottom:1px solid rgba(255,255,255,.06);
-      background: rgba(16,23,34,.55);
-    }
-    .card .hd h2{margin:0; font-size:16px}
-    .card .bd{padding:16px}
-    .row{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:12px;
-    }
-    @media (max-width: 520px){
-      .row{grid-template-columns:1fr}
-    }
-    label{
-      display:block;
-      font-size:12px;
-      color:var(--muted);
-      margin-bottom:6px;
-    }
-    input, select{
-      width:100%;
-      padding:10px 10px;
-      border-radius:12px;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(0,0,0,.22);
-      color:var(--text);
-      outline:none;
-    }
-    input:focus, select:focus{border-color: rgba(106,169,255,.55); box-shadow:0 0 0 4px rgba(106,169,255,.12);}
-    .hint{
-      margin-top:8px;
-      font-size:12px;
-      color:var(--muted);
-    }
-    .modeTabs{ display:flex; gap:8px; flex-wrap:wrap; }
-    .tab{
-      cursor:pointer;
-      padding:8px 10px;
-      font-size:13px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.03);
-      color:var(--muted);
-      user-select:none;
-    }
-    .tab[aria-selected="true"]{
-      background: rgba(106,169,255,.18);
-      border-color: rgba(106,169,255,.45);
-      color: var(--text);
-    }
-    .kpis{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:12px;
-    }
-    @media (max-width: 520px){
-      .kpis{grid-template-columns:1fr}
-    }
-    .kpi{
-      border:1px solid rgba(255,255,255,.08);
-      background: rgba(0,0,0,.18);
-      border-radius: 14px;
-      padding:12px;
-    }
-    .kpi .t{font-size:12px; color:var(--muted)}
-    .kpi .v{font-size:18px; margin-top:6px}
-    .kpi .s{font-size:12px; margin-top:6px; color:var(--muted)}
-    .good{color:var(--good)}
-    .warn{color:var(--warn)}
-    .bad{color:var(--bad)}
-    .split{
-      display:flex; gap:12px; flex-wrap:wrap; align-items:center; justify-content:space-between;
-      margin-top:10px;
-      padding-top:12px;
-      border-top:1px solid rgba(255,255,255,.06);
-    }
-    .btn{
-      cursor:pointer;
-      border:none;
-      border-radius: 12px;
-      padding:10px 12px;
-      background: rgba(70,211,154,.18);
-      color: var(--text);
-      border:1px solid rgba(70,211,154,.35);
-      font-weight:600;
-    }
-    .btn:hover{filter:brightness(1.06)}
-    .btn.secondary{
-      background: rgba(255,255,255,.05);
-      border-color: rgba(255,255,255,.10);
-      color: var(--muted);
-      font-weight:600;
-    }
-    .small{ font-size:12px; color:var(--muted); }
-    .table{
-      width:100%;
-      border-collapse: separate;
-      border-spacing: 0;
-      overflow:hidden;
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,.08);
-      background: rgba(0,0,0,.12);
-    }
-    .table th, .table td{
-      padding:10px 10px;
-      border-bottom:1px solid rgba(255,255,255,.06);
-      font-size:13px;
-    }
-    .table th{color:var(--muted); font-weight:600; text-align:left}
-    .table tr:last-child td{border-bottom:none}
-    .foot{ margin-top:14px; font-size:12px; color:var(--muted); }
-    .callout{
-      border:1px solid rgba(106,169,255,.22);
-      background: rgba(106,169,255,.08);
-      padding:12px;
-      border-radius:14px;
-      margin-bottom:12px;
-      color: var(--text);
-    }
-    .callout b{color:#dfeaff}
-    .back-home{ padding:10px 16px; }
   </style>
 </head>
- 
+
 <body>
-<div style="padding:10px;background:#16a34a;color:white;font-weight:700;">
-  VERSION TEST: March 5
-</div>  <div class="navbar">
+  <div class="navbar">
     <div class="navbrand">
       <a href="/" style="color:#fff;text-decoration:none;">Prorai8</a>
+    </div>
+
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/roi/">Calculator</a>
+      <a href="/learn">Learn</a>
+      <a href="/blog">Blog</a>
+      <a href="/about">About</a>
     </div>
 
     <form id="site-search-form" class="search-wrap" action="javascript:void(0)">
@@ -385,12 +598,188 @@
     <a href="/">← Back to Home</a>
   </div>
 
-  <!-- ROI CALCULATOR (this MUST contain your calculator HTML, not just comments) -->
   <div class="wrap">
-    <!-- paste your FULL calculator HTML here -->
+    <header>
+      <div class="brand">
+        <h1>Prorai8 ROI Calculator</h1>
+        <p>
+          Estimate returns from the <b>Double-8 strategy</b>: stable long-term leases +
+          higher-yield mid-term stays, with an <b>auto-shift</b> model based on demand.
+        </p>
+      </div>
+
+      <div class="pillbar">
+        <div class="pill">Pro-rata math</div>
+        <div class="pill">Auto shift: Zip ↔ Air</div>
+        <div class="pill">Real cashflow</div>
+      </div>
+    </header>
+
+    <div class="grid">
+      <section class="card" aria-label="Inputs">
+        <div class="hd">
+          <h2>Inputs</h2>
+          <div class="modeTabs" role="tablist" aria-label="ROI mode">
+            <div class="tab" role="tab" tabindex="0" data-mode="long" aria-selected="false">Long-term</div>
+            <div class="tab" role="tab" tabindex="0" data-mode="mid" aria-selected="false">Mid-term</div>
+            <div class="tab" role="tab" tabindex="0" data-mode="auto" aria-selected="true">Auto</div>
+          </div>
+        </div>
+
+        <div class="bd">
+          <div class="callout">
+            <b>Auto mode</b> blends Long-term + Mid-term assumptions based on the demand share slider.
+          </div>
+
+          <div class="row">
+            <div>
+              <label for="purchasePrice">Purchase price ($)</label>
+              <input id="purchasePrice" type="number" min="0" step="1000" value="420000" />
+            </div>
+            <div>
+              <label for="downPaymentPct">Down payment (%)</label>
+              <input id="downPaymentPct" type="number" min="0" max="100" step="0.1" value="20" />
+            </div>
+
+            <div>
+              <label for="interestRate">Interest rate (APR %)</label>
+              <input id="interestRate" type="number" min="0" step="0.01" value="6.75" />
+            </div>
+            <div>
+              <label for="loanYears">Loan term (years)</label>
+              <input id="loanYears" type="number" min="1" step="1" value="30" />
+            </div>
+
+            <div>
+              <label for="propertyTaxMonthly">Property tax (monthly $)</label>
+              <input id="propertyTaxMonthly" type="number" min="0" step="10" value="420" />
+            </div>
+            <div>
+              <label for="insuranceMonthly">Insurance (monthly $)</label>
+              <input id="insuranceMonthly" type="number" min="0" step="10" value="140" />
+            </div>
+
+            <div>
+              <label for="hoaMonthly">HOA (monthly $)</label>
+              <input id="hoaMonthly" type="number" min="0" step="10" value="0" />
+            </div>
+            <div>
+              <label for="maintenancePct">Maintenance reserve (% of revenue)</label>
+              <input id="maintenancePct" type="number" min="0" step="0.1" value="7" />
+            </div>
+          </div>
+
+          <div style="height:14px;"></div>
+
+          <div class="row">
+            <div>
+              <label for="longRent">Long-term rent (monthly $)</label>
+              <input id="longRent" type="number" min="0" step="25" value="2350" />
+            </div>
+            <div>
+              <label for="longVacancyPct">Long-term vacancy (% of month)</label>
+              <input id="longVacancyPct" type="number" min="0" max="100" step="0.1" value="4" />
+            </div>
+
+            <div>
+              <label for="midNightly">Mid-term avg nightly rate ($)</label>
+              <input id="midNightly" type="number" min="0" step="5" value="145" />
+            </div>
+            <div>
+              <label for="midOccPct">Mid-term occupancy (%)</label>
+              <input id="midOccPct" type="number" min="0" max="100" step="0.1" value="78" />
+            </div>
+
+            <div>
+              <label for="midOpsPct">Mid-term ops (% of mid-term revenue)</label>
+              <input id="midOpsPct" type="number" min="0" max="100" step="0.1" value="22" />
+            </div>
+            <div>
+              <label for="mgmtPct">Management fee (% of revenue)</label>
+              <input id="mgmtPct" type="number" min="0" max="100" step="0.1" value="8" />
+            </div>
+          </div>
+
+          <div style="height:14px;"></div>
+
+          <div class="row" id="autoControls">
+            <div style="grid-column:1 / -1;">
+              <label for="demandShareMid">Auto shift: Mid-term demand share (%)</label>
+              <input id="demandShareMid" type="range" min="0" max="100" step="1" value="55" />
+              <div class="hint">
+                0% = all Long-term • 100% = all Mid-term
+              </div>
+              <div class="split">
+                <div class="small"><b>Long-term share:</b> <span id="longShareLabel">45%</span></div>
+                <div class="small"><b>Mid-term share:</b> <span id="midShareLabel">55%</span></div>
+                <button class="btn secondary" id="resetBtn" type="button">Reset defaults</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="foot">
+            This is an estimate. Real performance depends on location, demand, seasonality, financing, and property condition.
+          </div>
+        </div>
+      </section>
+
+      <section class="card" aria-label="Outputs">
+        <div class="hd">
+          <h2>Results</h2>
+          <button class="btn" id="copyBtn" type="button">Copy summary</button>
+        </div>
+
+        <div class="bd">
+          <div class="kpis">
+            <div class="kpi">
+              <div class="t">Monthly cashflow</div>
+              <div class="v" id="kpiCashflow">$0</div>
+              <div class="s" id="kpiCashflowSub">—</div>
+            </div>
+
+            <div class="kpi">
+              <div class="t">Annual net profit</div>
+              <div class="v" id="kpiAnnual">$0</div>
+              <div class="s" id="kpiAnnualSub">—</div>
+            </div>
+
+            <div class="kpi">
+              <div class="t">Cash-on-cash ROI</div>
+              <div class="v" id="kpiRoi">0%</div>
+              <div class="s">Based on down payment only.</div>
+            </div>
+
+            <div class="kpi">
+              <div class="t">Payback period</div>
+              <div class="v" id="kpiPayback">—</div>
+              <div class="s">Years to recover down payment from net cashflow.</div>
+            </div>
+          </div>
+
+          <div style="height:14px;"></div>
+
+          <table class="table" aria-label="Breakdown">
+            <thead>
+              <tr>
+                <th>Line item</th>
+                <th>Monthly</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Gross revenue</td><td id="rowRevenue">$0</td></tr>
+              <tr><td>Operating costs</td><td id="rowOps">$0</td></tr>
+              <tr><td>Fixed costs</td><td id="rowFixed">$0</td></tr>
+              <tr><td>Mortgage (P&I)</td><td id="rowMortgage">$0</td></tr>
+              <tr><td><b>Net cashflow</b></td><td id="rowNet"><b>$0</b></td></tr>
+            </tbody>
+          </table>
+
+          <div class="foot" id="modeExplain"></div>
+        </div>
+      </section>
+    </div>
   </div>
 
-  <!-- AI BUTTON + CHATBOX -->
   <button id="ai-toggle" aria-expanded="false" aria-controls="ai-chatbox">Ask Prorai8 AI</button>
 
   <div id="ai-chatbox" role="dialog" aria-label="AI Chat">
@@ -400,7 +789,7 @@
     </div>
 
     <div id="ai-messages" class="chat-messages">
-      <div class="msg ai">Hello 👋 Ask me about ROI, rent estimates, or property deals.</div>
+      <div class="msg ai">Hello 👋 Ask me about ROI, cashflow, pricing, or which mode to use.</div>
     </div>
 
     <form id="ai-form" class="chat-input-row">
@@ -408,116 +797,350 @@
       <button id="ai-send" class="chat-send" type="submit">Send</button>
     </form>
   </div>
- 
+
   <script>
-  // ===== CHATBOX =====
-  const toggleBtn = document.getElementById('ai-toggle');
-  const chatbox   = document.getElementById('ai-chatbox');
-  const closeBtn  = document.getElementById('ai-close');
-  const chatForm  = document.getElementById('ai-form');
-  const chatInput = document.getElementById('ai-input');
-  const messages  = document.getElementById('ai-messages');
+    const $ = (id) => document.getElementById(id);
 
-  if (toggleBtn && chatbox && closeBtn && chatForm && chatInput && messages) {
-    function openChat(){
-      chatbox.style.display = 'block';
-      toggleBtn.setAttribute('aria-expanded', 'true');
-      setTimeout(() => chatInput.focus(), 0);
-    }
-    function closeChat(){
-      chatbox.style.display = 'none';
-      toggleBtn.setAttribute('aria-expanded', 'false');
-    }
-    function addMsg(text, who){
-      const div = document.createElement('div');
-      div.className = 'msg ' + who;
-      div.textContent = text;
-      messages.appendChild(div);
-      messages.scrollTop = messages.scrollHeight;
+    function fmtMoney(n){
+      const x = Number(n || 0);
+      return x.toLocaleString(undefined, {
+        style:"currency",
+        currency:"USD",
+        maximumFractionDigits:0
+      });
     }
 
-    toggleBtn.addEventListener('click', () => {
-      const isOpen = chatbox.style.display === 'block';
-      isOpen ? closeChat() : openChat();
-    });
-
-    closeBtn.addEventListener('click', closeChat);
-
-    chatForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const text = (chatInput.value || '').trim();
-      if(!text) return;
-      addMsg(text, 'user');
-      chatInput.value = '';
-      addMsg("Got it — you said: " + text, 'ai');
-    });
-  }
-
-  // ===== SEARCH =====
-  const searchInput  = document.getElementById('site-search');
-  const resultsBox   = document.getElementById('search-results');
-  const searchForm   = document.getElementById('site-search-form');
-
-  const PAGES = [
-    { title: "ROI Calculator", desc: "Estimate returns with Double-8 strategy", url: "/roi/" },
-    { title: "Pricing", desc: "Plans and what’s included", url: "/pricing" },
-    { title: "Contact", desc: "Get in touch", url: "/contact" },
-    { title: "About", desc: "What Prorai8 is building", url: "/about" }
-  ];
-
-  function renderResults(items){
-    if(!items.length){
-      resultsBox.style.display = 'none';
-      resultsBox.innerHTML = '';
-      return;
+    function fmtMoney2(n){
+      const x = Number(n || 0);
+      return x.toLocaleString(undefined, {
+        style:"currency",
+        currency:"USD",
+        maximumFractionDigits:2
+      });
     }
-    resultsBox.innerHTML = items.map(i => `
-      <div class="search-item" data-url="${i.url}">
-        ${i.title}
-        <small>${i.desc}</small>
-      </div>
-    `).join('');
-    resultsBox.style.display = 'block';
-  }
 
-  // typing search
-  searchInput?.addEventListener('input', () => {
-    const q = (searchInput.value || '').trim().toLowerCase();
-    if(!q){ renderResults([]); return; }
-    const hits = PAGES
-      .filter(p => (p.title + " " + p.desc).toLowerCase().includes(q))
-      .slice(0, 6);
-    renderResults(hits);
-  });
-
-  // Enter/Search button submit
-  searchForm?.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const q = (searchInput.value || '').trim().toLowerCase();
-    if(!q){ renderResults([]); return; }
-    const hits = PAGES
-      .filter(p => (p.title + " " + p.desc).toLowerCase().includes(q))
-      .slice(0, 6);
-    renderResults(hits);
-  });
-
-  // click result
-  resultsBox?.addEventListener('click', (e) => {
-    const item = e.target.closest('.search-item');
-    if(!item) return;
-    window.location.href = item.getAttribute('data-url');
-  });
-
-  // close dropdown on outside click
-  document.addEventListener('click', (e) => {
-    if(resultsBox && !resultsBox.contains(e.target) && e.target !== searchInput){
-      resultsBox.style.display = 'none';
+    function clamp(v, min, max){
+      return Math.min(max, Math.max(min, v));
     }
-  });
-</script>
-  <!-- GOOGLE PLACES (optional) -->
-  <script async
-    src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY&libraries=places&callback=initPlaces">
+
+    function mortgagePI(loanAmount, annualRatePct, years){
+      const r = (annualRatePct / 100) / 12;
+      const n = years * 12;
+      if (loanAmount <= 0 || n <= 0) return 0;
+      if (r === 0) return loanAmount / n;
+      return loanAmount * (r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+    }
+
+    function scoreClass(n){
+      if (n >= 500) return "good";
+      if (n >= 0) return "warn";
+      return "bad";
+    }
+
+    const defaults = {
+      purchasePrice: 420000,
+      downPaymentPct: 20,
+      interestRate: 6.75,
+      loanYears: 30,
+      propertyTaxMonthly: 420,
+      insuranceMonthly: 140,
+      hoaMonthly: 0,
+      maintenancePct: 7,
+      longRent: 2350,
+      longVacancyPct: 4,
+      midNightly: 145,
+      midOccPct: 78,
+      midOpsPct: 22,
+      mgmtPct: 8,
+      demandShareMid: 55
+    };
+
+    let mode = "auto";
+
+    function setMode(newMode){
+      mode = newMode;
+      document.querySelectorAll(".tab").forEach(t => {
+        t.setAttribute("aria-selected", t.dataset.mode === mode ? "true" : "false");
+      });
+      $("autoControls").style.display = (mode === "auto") ? "grid" : "none";
+      render();
+    }
+
+    function readInputs(){
+      const v = (id) => Number($(id).value || 0);
+      const demandMid = v("demandShareMid");
+
+      let midShare = 0;
+      let longShare = 0;
+
+      if (mode === "long"){ longShare = 100; midShare = 0; }
+      if (mode === "mid"){ longShare = 0; midShare = 100; }
+      if (mode === "auto"){ midShare = clamp(demandMid, 0, 100); longShare = 100 - midShare; }
+
+      const longGross = v("longRent") * (1 - clamp(v("longVacancyPct"), 0, 100) / 100);
+      const midGross = v("midNightly") * 30 * (clamp(v("midOccPct"), 0, 100) / 100);
+
+      const grossRevenue = (longGross * (longShare / 100)) + (midGross * (midShare / 100));
+
+      const maintenance = grossRevenue * (clamp(v("maintenancePct"), 0, 100) / 100);
+      const mgmt = grossRevenue * (clamp(v("mgmtPct"), 0, 100) / 100);
+      const midOps = (midGross * (midShare / 100)) * (clamp(v("midOpsPct"), 0, 100) / 100);
+
+      const fixed = v("propertyTaxMonthly") + v("insuranceMonthly") + v("hoaMonthly");
+
+      const purchase = v("purchasePrice");
+      const downPct = clamp(v("downPaymentPct"), 0, 100) / 100;
+      const down = purchase * downPct;
+      const loan = Math.max(0, purchase - down);
+      const mort = mortgagePI(loan, v("interestRate"), v("loanYears"));
+
+      const operating = maintenance + mgmt + midOps;
+      const net = grossRevenue - operating - fixed - mort;
+
+      return {
+        mode,
+        longShare,
+        midShare,
+        purchase,
+        down,
+        loan,
+        grossRevenue,
+        operating,
+        fixed,
+        mort,
+        net,
+        parts:{ longGross, midGross, maintenance, mgmt, midOps }
+      };
+    }
+
+    function render(){
+      const d = readInputs();
+
+      $("midShareLabel").textContent = `${Math.round(d.midShare)}%`;
+      $("longShareLabel").textContent = `${Math.round(d.longShare)}%`;
+
+      const annual = d.net * 12;
+      const roi = (d.down > 0) ? (annual / d.down) * 100 : 0;
+      const paybackYears = (annual > 0 && d.down > 0) ? (d.down / annual) : null;
+
+      $("kpiCashflow").textContent = fmtMoney2(d.net);
+      $("kpiCashflow").className = `v ${scoreClass(d.net)}`;
+
+      $("kpiAnnual").textContent = fmtMoney2(annual);
+      $("kpiAnnual").className = `v ${scoreClass(annual / 12)}`;
+
+      $("kpiRoi").textContent = `${roi.toFixed(1)}%`;
+      $("kpiPayback").textContent = paybackYears ? `${paybackYears.toFixed(1)} yrs` : (annual <= 0 ? "No payback" : "—");
+
+      $("kpiCashflowSub").textContent =
+        (mode === "auto")
+          ? `Blended: ${Math.round(d.longShare)}% long-term + ${Math.round(d.midShare)}% mid-term`
+          : (mode === "long" ? "Long-term only" : "Mid-term only");
+
+      $("kpiAnnualSub").textContent = `Down payment: ${fmtMoney(d.down)} • Loan: ${fmtMoney(d.loan)}`;
+
+      $("rowRevenue").textContent = fmtMoney2(d.grossRevenue);
+      $("rowOps").textContent = fmtMoney2(d.operating);
+      $("rowFixed").textContent = fmtMoney2(d.fixed);
+      $("rowMortgage").textContent = fmtMoney2(d.mort);
+      $("rowNet").textContent = fmtMoney2(d.net);
+
+      const exp = [];
+      if (mode === "long"){
+        exp.push(`Mode: <b>Long-term</b> — uses monthly rent with vacancy discount.`);
+      } else if (mode === "mid"){
+        exp.push(`Mode: <b>Mid-term</b> — uses nightly rate × occupancy, plus higher ops.`);
+      } else {
+        exp.push(`Mode: <b>Auto</b> — blends Long-term and Mid-term based on demand share.`);
+      }
+
+      exp.push(`Long-term gross: ${fmtMoney2(d.parts.longGross)} / mo.`);
+      exp.push(`Mid-term gross: ${fmtMoney2(d.parts.midGross)} / mo.`);
+      exp.push(`Operating split: mid-term ops ${fmtMoney2(d.parts.midOps)} + management ${fmtMoney2(d.parts.mgmt)} + maintenance ${fmtMoney2(d.parts.maintenance)}.`);
+
+      $("modeExplain").innerHTML = exp.join(" ");
+
+      $("copyBtn").onclick = async () => {
+        const summary =
+`Prorai8 ROI (${d.mode.toUpperCase()})
+Gross revenue: ${fmtMoney2(d.grossRevenue)}/mo
+Operating: ${fmtMoney2(d.operating)}/mo
+Fixed: ${fmtMoney2(d.fixed)}/mo
+Mortgage: ${fmtMoney2(d.mort)}/mo
+Net cashflow: ${fmtMoney2(d.net)}/mo
+Annual net: ${fmtMoney2(annual)}
+Down payment: ${fmtMoney(d.down)}
+Cash-on-cash ROI: ${roi.toFixed(1)}%
+${mode === "auto" ? `Blend: ${Math.round(d.longShare)}% long-term / ${Math.round(d.midShare)}% mid-term` : ""}`.trim();
+
+        try{
+          await navigator.clipboard.writeText(summary);
+          $("copyBtn").textContent = "Copied ✓";
+          setTimeout(() => $("copyBtn").textContent = "Copy summary", 1200);
+        } catch (e){
+          alert("Copy failed.");
+        }
+      };
+    }
+
+    function wireCalculator(){
+      document.querySelectorAll(".tab").forEach(t => {
+        t.addEventListener("click", () => setMode(t.dataset.mode));
+        t.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ") setMode(t.dataset.mode);
+        });
+      });
+
+      const ids = [
+        "purchasePrice","downPaymentPct","interestRate","loanYears",
+        "propertyTaxMonthly","insuranceMonthly","hoaMonthly","maintenancePct",
+        "longRent","longVacancyPct","midNightly","midOccPct","midOpsPct","mgmtPct",
+        "demandShareMid"
+      ];
+
+      ids.forEach(id => $(id).addEventListener("input", render));
+
+      $("resetBtn").addEventListener("click", () => {
+        Object.entries(defaults).forEach(([k,v]) => {
+          if ($(k)) $(k).value = v;
+        });
+        setMode("auto");
+        render();
+      });
+
+      setMode("auto");
+      render();
+    }
+
+    function localAssistantReply(text){
+      const t = (text || "").toLowerCase();
+
+      if (t.includes("roi") || t.includes("cashflow")) {
+        return "Focus on purchase price, rent, down payment, interest rate, and total operating costs. Auto mode helps compare mixed use assumptions quickly.";
+      }
+      if (t.includes("long")) {
+        return "Long-term mode is better for stability. Use monthly rent and vacancy assumptions to see conservative cashflow.";
+      }
+      if (t.includes("mid")) {
+        return "Mid-term mode is useful when you expect stronger occupancy and higher nightly rates, but also higher operating costs.";
+      }
+      if (t.includes("pricing")) {
+        return "Your pricing page can explain how Prorai8 helps owners compare long-term, mid-term, and blended strategies.";
+      }
+      return "Ask me about ROI, cashflow, long-term vs mid-term mode, or which numbers to change first.";
+    }
+
+    function wireChat(){
+      const toggleBtn = $("ai-toggle");
+      const chatbox = $("ai-chatbox");
+      const closeBtn = $("ai-close");
+      const chatForm = $("ai-form");
+      const chatInput = $("ai-input");
+      const messages = $("ai-messages");
+
+      function openChat(){
+        chatbox.style.display = "block";
+        toggleBtn.setAttribute("aria-expanded", "true");
+        setTimeout(() => chatInput.focus(), 0);
+      }
+
+      function closeChat(){
+        chatbox.style.display = "none";
+        toggleBtn.setAttribute("aria-expanded", "false");
+      }
+
+      function addMsg(text, who){
+        const div = document.createElement("div");
+        div.className = "msg " + who;
+        div.textContent = text;
+        messages.appendChild(div);
+        messages.scrollTop = messages.scrollHeight;
+      }
+
+      toggleBtn.addEventListener("click", () => {
+        const isOpen = chatbox.style.display === "block";
+        isOpen ? closeChat() : openChat();
+      });
+
+      closeBtn.addEventListener("click", closeChat);
+
+      chatForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const text = (chatInput.value || "").trim();
+        if (!text) return;
+        addMsg(text, "user");
+        chatInput.value = "";
+        addMsg(localAssistantReply(text), "ai");
+      });
+    }
+
+    function wireSearch(){
+      const searchInput = $("site-search");
+      const resultsBox = $("search-results");
+      const searchForm = $("site-search-form");
+
+      const PAGES = [
+        { title: "ROI Calculator", desc: "Estimate returns with Double-8 strategy", url: "/roi/" },
+        { title: "Home", desc: "Back to Prorai8 homepage", url: "/" },
+        { title: "About", desc: "What Prorai8 is building", url: "/about" },
+        { title: "Blog", desc: "Articles and updates", url: "/blog" },
+        { title: "Learn", desc: "Guides and education", url: "/learn" }
+      ];
+
+      function renderResults(items){
+        if (!items.length){
+          resultsBox.style.display = "none";
+          resultsBox.innerHTML = "";
+          return;
+        }
+
+        resultsBox.innerHTML = items.map(i => `
+          <div class="search-item" data-url="${i.url}">
+            ${i.title}
+            <small>${i.desc}</small>
+          </div>
+        `).join("");
+
+        resultsBox.style.display = "block";
+      }
+
+      function runSearch(){
+        const q = (searchInput.value || "").trim().toLowerCase();
+        if (!q){
+          renderResults([]);
+          return;
+        }
+
+        const hits = PAGES
+          .filter(p => (p.title + " " + p.desc).toLowerCase().includes(q))
+          .slice(0, 6);
+
+        renderResults(hits);
+      }
+
+      searchInput.addEventListener("input", runSearch);
+
+      searchForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        runSearch();
+      });
+
+      resultsBox.addEventListener("click", (e) => {
+        const item = e.target.closest(".search-item");
+        if (!item) return;
+        window.location.href = item.getAttribute("data-url");
+      });
+
+      document.addEventListener("click", (e) => {
+        if (!resultsBox.contains(e.target) && e.target !== searchInput){
+          resultsBox.style.display = "none";
+        }
+      });
+    }
+
+    wireCalculator();
+    wireChat();
+    wireSearch();
   </script>
 </body>
 </html>
