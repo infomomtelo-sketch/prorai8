@@ -635,6 +635,10 @@
           </div>
 
           <div class="row">
+           <div>
+              <label for="propertyAddress">Property address</label>
+              <input id="propertyAddress" type="text" placeholder="Start typing an address..." />
+            </div>            
             <div>
               <label for="purchasePrice">Purchase price ($)</label>
               <input id="purchasePrice" type="number" min="0" step="1000" value="420000" />
@@ -1145,5 +1149,25 @@ ${mode === "auto" ? `Blend: ${Math.round(d.longShare)}% long-term / ${Math.round
     wireChat();
     wireSearch();
   </script>
+  <script>
+function initPlaces(){
+  const input = document.getElementById("propertyAddress");
+  if(!input) return;
+
+  const autocomplete = new google.maps.places.Autocomplete(input,{
+    types:["address"],
+    componentRestrictions:{country:"us"}
+  });
+
+  autocomplete.addListener("place_changed",function(){
+    const place = autocomplete.getPlace();
+    console.log("Selected place:", place.formatted_address);
+  });
+}
+</script>
+
+<script async
+src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAo7hKRwZKDbak7IcGL0CvlzvW_eE3NA2M&libraries=places&callback=initPlaces">
+</script>
 </body>
 </html>
